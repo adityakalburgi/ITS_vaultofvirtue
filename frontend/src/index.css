@@ -1,0 +1,270 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 0%;
+    --foreground: 123 96% 55%;
+
+    --card: 0 0% 5%;
+    --card-foreground: 123 96% 55%;
+
+    --popover: 0 0% 5%;
+    --popover-foreground: 123 96% 55%;
+
+    --primary: 123 96% 55%;
+    --primary-foreground: 0 0% 0%;
+
+    --secondary: 240 5% 10%;
+    --secondary-foreground: 123 96% 55%;
+
+    --muted: 240 5% 10%;
+    --muted-foreground: 237 13% 63%;
+
+    --accent: 240 5% 10%;
+    --accent-foreground: 123 96% 55%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 5% 15%;
+    --input: 240 5% 15%;
+    --ring: 123 96% 55%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 2%;
+    --sidebar-foreground: 123 96% 55%;
+    --sidebar-primary: 123 96% 55%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 240 5% 10%;
+    --sidebar-accent-foreground: 123 96% 55%;
+    --sidebar-border: 240 5% 15%;
+    --sidebar-ring: 123 96% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Roboto Mono', monospace;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-black;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-terminal-green bg-opacity-50 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-terminal-green;
+  }
+}
+
+/* Terminal effects */
+.terminal-text {
+  @apply font-mono text-terminal-green;
+}
+
+.terminal-prompt::after {
+  content: '';
+  @apply inline-block w-3 h-5 bg-terminal-green ml-1 animate-text-blink;
+}
+
+.terminal-window {
+  @apply bg-terminal-black border border-terminal-green rounded-md p-4 font-mono text-terminal-green;
+  overflow: auto;
+  max-height: 70vh;
+}
+
+.matrix-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.matrix-character {
+  position: absolute;
+  color: rgba(33, 250, 44, 0.7);
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1;
+  animation: matrix-fall 10s linear infinite;
+  transform: translateY(-100%);
+  text-shadow: 0 0 5px #21fa2c;
+}
+
+.glow-text {
+  @apply text-terminal-green animate-glow;
+}
+
+.glowing-border {
+  @apply border border-terminal-green rounded-md animate-pulse-border;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+.terminal-layout {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+}
+
+/* New horror-themed animations */
+
+/* Glitch text effect */
+.glitch-text {
+  position: relative;
+  animation: glitch 3s infinite;
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+/* Flickering text animation */
+.flicker-text {
+  animation: flicker 5s infinite;
+}
+
+@keyframes flicker {
+  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 1; }
+  20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.5; }
+}
+
+/* Pulsating text */
+.pulse-text {
+  animation: pulse-brightness 4s infinite;
+}
+
+@keyframes pulse-brightness {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.3); }
+}
+
+/* Card flicker effect */
+.feature-card.flicker {
+  animation: card-flicker 0.2s forwards;
+}
+
+@keyframes card-flicker {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.5); }
+}
+
+/* Shadow glow effect */
+.shadow-glow {
+  box-shadow: 0 0 8px rgba(33, 250, 44, 0.3);
+  transition: box-shadow 0.3s ease;
+}
+
+.shadow-glow:hover {
+  box-shadow: 0 0 20px rgba(33, 250, 44, 0.6);
+}
+
+/* Button shake effect */
+.hover-shake:hover {
+  animation: shake 0.5s;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+  20%, 40%, 60%, 80% { transform: translateX(2px); }
+}
+
+/* Glitch button effect */
+.hover-glitch {
+  position: relative;
+  overflow: hidden;
+}
+
+.hover-glitch:hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(33, 250, 44, 0.2), transparent);
+  animation: glitch-sweep 1s forwards;
+}
+
+@keyframes glitch-sweep {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Pulsing border */
+.pulse-border {
+  animation: border-pulse 2s infinite;
+}
+
+@keyframes border-pulse {
+  0%, 100% { border-color: rgba(33, 250, 44, 0.6); }
+  50% { border-color: rgba(33, 250, 44, 1); }
+}
+
+/* Haunted floating effect */
+.haunted {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* Rotating element */
+.rotating {
+  animation: rotate 6s linear infinite;
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Fade-in on view */
+.fade-in-view {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.7s forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
