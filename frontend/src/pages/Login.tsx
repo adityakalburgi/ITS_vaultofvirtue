@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -6,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Terminal } from "lucide-react";
 import MatrixBackground from "@/components/MatrixBackground";
-import BASE_URL from "../config";
 import { toast } from "sonner";
 
 const Login = () => {
@@ -21,36 +19,11 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      // Make API call here and get token
-      const response = await fetch(`${BASE_URL}/api/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, teamName }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        toast.error(errorData.message || "Login failed");
-        setIsLoading(false);
-        return;
-      }
-
-      const data = await response.json();
-
-      if (data.token) {
-        // Remove this block since login handles API call
-        // await login(data.token);
-        // Instead call login with email and teamName
-        const success = await login(email, teamName);
-        if (success) {
-          navigate("/guidelines");
-        } else {
-          toast.error("Login failed");
-        }
+      const success = await login(email, teamName);
+      if (success) {
+        navigate("/guidelines");
       } else {
-        toast.error("Login failed: No token received");
+        toast.error("Login failed");
       }
     } catch (error) {
       toast.error("Login failed: " + (error as Error).message);
