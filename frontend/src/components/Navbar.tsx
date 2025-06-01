@@ -85,7 +85,7 @@ const Navbar = () => {
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="flex items-center space-x-2">
           <Terminal className="h-6 w-6 text-terminal-green" />
-          <span className="text-terminal-green text-xl font-bold">TechEscape</span>
+          <span className="text-terminal-green text-xl font-bold">Vault of Virtue</span>
         </Link>
 
         {/* Desktop navigation */}

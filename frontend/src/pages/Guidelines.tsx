@@ -36,7 +36,7 @@ const Guidelines = () => {
               </div>
             </div>
             
-            <h1 className="text-2xl font-bold text-terminal-green mb-4 text-center">TechEscape Challenge Guidelines</h1>
+            <h1 className="text-2xl font-bold text-terminal-green mb-4 text-center">Vault of Virtue Challenge Guidelines</h1>
             
             <div className="space-y-6 text-terminal-green mb-6">
               <div className="flex items-start gap-3">

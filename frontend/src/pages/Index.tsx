@@ -8,7 +8,7 @@ import { Terminal, Code, Shield, Award, Ghost, Skull } from "lucide-react";
 const Index = () => {
   useEffect(() => {
     // Terminal typing effect
-    const text = "Welcome to TechEscape - A Technical Escape Room Challenge";
+    const text = "Welcome to Vault of Virtue - A Technical Escape Room Challenge by IEEE ITS WITH WIE";
     const typewriterElement = document.getElementById("typewriter");
     if (typewriterElement) {
       typewriterElement.textContent = "";
@@ -93,7 +93,7 @@ const Index = () => {
               {/* Text will be filled by typewriter effect */}
             </h1>
             <p className="text-terminal-green text-xl md:text-2xl mb-8 pulse-text">
-              Test your technical skills, solve puzzles, debug code, and escape the digital labyrinth.
+              By IEEE Information theory Society and Womens in Tech
             </p>
             <div className="flex flex-col md:flex-row items-center justify-center gap-4">
               {isAuthenticated ? (
@@ -166,7 +166,7 @@ const Index = () => {
 
         {/* How it works */}
         <section className="py-10">
-          <h2 className="text-2xl md:text-3xl font-bold text-terminal-green mb-8 text-center glitch-text">How TechEscape Works</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-terminal-green mb-8 text-center glitch-text">How Vault of Virtue Works</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
             <div className="p-4 fade-in-view">
@@ -216,7 +216,7 @@ const Index = () => {
           <div className="max-w-3xl mx-auto">
             <h2 className="text-2xl md:text-4xl font-bold text-terminal-green mb-4 glow-text">Ready to Test Your Skills?</h2>
             <p className="text-terminal-green text-xl mb-8 flicker-text">
-              Join the TechEscape community and challenge yourself with our technical escape room puzzles.
+              Join the Vault of virtue community and challenge yourself with our technical escape room puzzles.
             </p>
             <Button asChild size="lg" className="bg-terminal-green text-terminal-black hover:bg-opacity-80 px-8 animate-pulse">
               <Link to={isAuthenticated ? "/challenges" : "/register"} className="flex items-center">
