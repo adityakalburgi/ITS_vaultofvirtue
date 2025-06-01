@@ -38,7 +38,7 @@ const LeaderboardPage = () => {
             <Award className="h-8 w-8 mr-3" /> Leaderboard
           </h1>
           <p className="text-terminal-green text-opacity-70">
-            Top hackers who have mastered the TechEscape challenges
+            Top hackers who have mastered the Vault of Virtue challenges
           </p>
         </div>
 
