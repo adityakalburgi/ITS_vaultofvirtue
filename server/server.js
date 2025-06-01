@@ -9,7 +9,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:8080', // Replace with your frontend origin
+  origin: 'https://vaultofvirtue.netlify.app', // Replace with your frontend origin
   credentials: true
 }));
 app.use(express.json());
