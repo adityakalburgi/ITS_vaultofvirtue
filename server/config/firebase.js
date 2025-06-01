@@ -4,15 +4,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // Firebase admin initialization
-let serviceAccount;
-
-// If using environment variables for credentials
-if (process.env.FIREBASE_SERVICE_ACCOUNT) {
-  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-} else {
-  // Or use a service account file
-  serviceAccount = require('../config/serviceAccountKey.json');
-}
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
