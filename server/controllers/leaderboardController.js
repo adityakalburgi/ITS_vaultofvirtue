@@ -196,7 +196,8 @@ exports.getTeamDetails = async (req, res) => {
       teamId,
       teamName,
       memberCount: members.length,
-      members
+      members,
+      score
     });
   } catch (error) {
     console.error('Error fetching team details:', error);
