@@ -3,7 +3,7 @@ const { db, admin } = require('../config/firebase');
 const challenges = [
   {
     title: "Pride – Hubris Hall",
-    description: "Theme: Ego, illusion of complexity, deception in simplicity.\n\nClue 1: Binary Illusion Puzzle\nA binary string (01001000 01110101 01100010 01110010 01101001 01110011) converts to “Hubris” in ASCII.\n\nClue 2: Code Mirror\nPresent a Python snippet that gives a wrong output unless mirrored.\n\nQuestion:\ndef unlock_code():\n  code = \"edoc_eruces_eht_si_siht\"\n  print(\"Secret Code:\", code)\nunlock_code()\n\nAnswer: \"this_is_the_secure_code\"",
+    description: "Theme: Ego, illusion of complexity, deception in simplicity.\n\nClue 1: Binary Illusion Puzzle\nA binary string (01001000 01110101 01100010 01110010 01101001 01110011) converts through  ASCII.\n\nQuestion:\ndef unlock_code():\n  code = \"edoc_eruces_eht_si_siht\"\n  print(\"Secret Code:\", code)\nunlock_code()\n\nAnswer: \"this_is_the_secure_code\"",
     difficulty: "medium",
     type: "python",
     points: 30,
