@@ -246,7 +246,7 @@ const Navbar = () => {
             {isAuthenticated && currentUser && !currentUser.isAdmin && (
               <div className="flex items-center space-x-2 text-terminal-green py-2">
                 <Coins className="h-5 w-5" />
-                <span className="font-bold">{teamScore ?? 0} points</span>
+                <span className="font-bold">{teamScore ?? teamScore : 0} points</span>
               </div>
             )}
 
