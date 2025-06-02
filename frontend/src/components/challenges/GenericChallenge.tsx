@@ -21,7 +21,7 @@ interface GenericChallengeProps {
 
 const GenericChallenge = ({ challenge }: GenericChallengeProps) => {
   const [answer, setAnswer] = useState("");
-  const { markChallengeCompleted, hasCompletedChallenge } = useData();
+  const { completeChallenge, hasCompletedChallenge } = useData();
   const { isAuthenticated, token } = useAuth();
 
   const isCompleted = hasCompletedChallenge(challenge.id);
@@ -43,7 +43,7 @@ const GenericChallenge = ({ challenge }: GenericChallengeProps) => {
     setIsSubmitting(true);
     try {
       // Call backend API to validate answer and mark challenge completed
-      await markChallengeCompleted(challenge.id, answer.trim());
+      await completeChallenge(challenge.id, answer.trim());
       toast.success("Challenge completed! Your score has been updated.");
     } catch (error) {
       toast.error("Incorrect answer or submission failed.");
