@@ -88,31 +88,30 @@ exports.submitSolution = async (req, res) => {
     const challenge = challengeDoc.data();
     
     // Verify solution (case insensitive comparison)
-    try{ 
-      if (solution.trim().toLowerCase() !== challenge.solution.trim().toLowerCase()) {
-        // Log failed attempt
-        await db.collection('attempts').add({
-          userId: req.user.uid,
-          username: userData.username,
-          challengeId,
-          challengeTitle: challenge.title,
-          solution: solution,
-          success: false,
-          timestamp: admin.firestore.FieldValue.serverTimestamp()
-        });
-        
-        // Log security event
-        await db.collection('securityLogs').add({
-          type: 'FAILED_SOLUTION',
-          userId: req.user.uid,
-          challengeId,
-          timestamp: admin.firestore.FieldValue.serverTimestamp(),
-          details: `Failed solution attempt for challenge: ${challenge.title}`
-        });
-        throw new Error("Incorrect Solution");        
-      }}
-    catch (err) {
-        return res.status(400).json({ success: false, message: err.message });
+    const isCorrect = solution.trim().toLowerCase() === challenge.solution.trim().toLowerCase();
+    
+    if (!isCorrect) {
+      // Log failed attempt
+      await db.collection('attempts').add({
+        userId: req.user.uid,
+        username: userData.username,
+        challengeId,
+        challengeTitle: challenge.title,
+        solution: solution,
+        success: false,
+        timestamp: admin.firestore.FieldValue.serverTimestamp()
+      });
+      
+      // Log security event
+      await db.collection('securityLogs').add({
+        type: 'FAILED_SOLUTION',
+        userId: req.user.uid,
+        challengeId,
+        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        details: `Failed solution attempt for challenge: ${challenge.title}`
+      });
+      
+      return handleResponse(res, 400, false, 'Incorrect solution. Please try again.');
     }
     
     // Solution is correct, update user data in a transaction for consistency
@@ -120,8 +119,12 @@ exports.submitSolution = async (req, res) => {
       // Get fresh user data within transaction
       const userRef = db.collection('users').doc(req.user.uid);
       const userSnapshot = await transaction.get(userRef);
+      
+      if (!userSnapshot.exists) {
+        throw new Error('User not found in transaction');
+      }
+      
       const user = userSnapshot.data();
-
       console.log("User data inside transaction before update:", user);
       
       // Make sure they haven't completed the challenge in the meantime
@@ -136,7 +139,7 @@ exports.submitSolution = async (req, res) => {
       const updatedCompletedChallenges = [...currentCompletedChallenges, challengeId];
       const updatedScore = (user.score || 0) + challenge.points;
 
-      console.log(`Updating user ${req.user.uid} score from ${user.score} to ${updatedScore}`);
+      console.log(`Updating user ${req.user.uid} score from ${user.score || 0} to ${updatedScore}`);
       console.log(`Updating completedChallenges to:`, updatedCompletedChallenges);
 
       // Update team score in teams collection
@@ -146,8 +149,11 @@ exports.submitSolution = async (req, res) => {
         if (teamSnapshot.exists) {
           const teamData = teamSnapshot.data();
           const updatedTeamScore = (teamData.score || 0) + challenge.points;
-          console.log(`Updating team ${user.teamId} score from ${teamData.score} to ${updatedTeamScore}`);
-          transaction.update(teamRef, { score: updatedTeamScore });
+          console.log(`Updating team ${user.teamId} score from ${teamData.score || 0} to ${updatedTeamScore}`);
+          transaction.update(teamRef, { 
+            score: updatedTeamScore,
+            lastUpdated: admin.firestore.FieldValue.serverTimestamp()
+          });
         } else {
           console.warn(`Team document for ${user.teamId} does not exist.`);
         }
@@ -155,9 +161,11 @@ exports.submitSolution = async (req, res) => {
         console.warn(`User ${req.user.uid} does not have a teamId.`);
       }
       
+      // Update user document
       transaction.update(userRef, {
         completedChallenges: updatedCompletedChallenges,
-        score: updatedScore
+        score: updatedScore,
+        lastChallengeCompleted: admin.firestore.FieldValue.serverTimestamp()
       });
       
       // Log successful attempt
@@ -190,12 +198,14 @@ exports.submitSolution = async (req, res) => {
     
     console.log(`Updated user score for ${req.user.uid}: ${updatedUserData.score}`);
     
-    return handleResponse(res, 200, true, 'Challenge completed successfully', {
+    return handleResponse(res, 200, true, 'Challenge completed successfully!', {
       points: challenge.points,
       totalScore: updatedUserData.score,
       completedChallenges: updatedUserData.completedChallenges,
-      notification: `Congratulations! You have completed the challenge "${challenge.title}" and earned ${challenge.points} points. Your team leaderboard will be updated accordingly.`
+      challengeTitle: challenge.title,
+      notification: `Congratulations! You have completed "${challenge.title}" and earned ${challenge.points} points!`
     });
+    
   } catch (error) {
     console.error('Submit solution error:', error);
     
@@ -203,7 +213,11 @@ exports.submitSolution = async (req, res) => {
       return handleResponse(res, 400, false, 'Challenge already completed');
     }
     
-    return handleResponse(res, 500, false, 'Server error');
+    if (error.message === 'User not found in transaction') {
+      return handleResponse(res, 404, false, 'User not found');
+    }
+    
+    return handleResponse(res, 500, false, 'Server error occurred while processing your solution');
   }
 };
 
