@@ -155,8 +155,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem("currentUser", JSON.stringify({ ...data.data.user, firstLogin: true, sessionStartTime, teamId: teamIdValue }));
 
       // Set token from response
-      if (data.token) {
-        setToken(data.token);
+      if (data.data.token) {
+        setToken(data.data.token);
         localStorage.setItem("token", data.data.token);
       } else {
         setToken(null);
