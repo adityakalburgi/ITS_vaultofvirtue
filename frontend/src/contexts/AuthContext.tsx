@@ -157,7 +157,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // Set token from response
       if (data.token) {
         setToken(data.token);
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("token", data.data.token);
       } else {
         setToken(null);
         localStorage.removeItem("token");
