@@ -21,7 +21,7 @@ interface GenericChallengeProps {
 
 const GenericChallenge = ({ challenge }: GenericChallengeProps) => {
   const [answer, setAnswer] = useState("");
-  const { completeChallenge, hasCompletedChallenge } = useData();
+  const { completeChallenge, hasCompletedChallenge } = useAuth();
   const { isAuthenticated, token } = useAuth();
 
   const isCompleted = hasCompletedChallenge(challenge.id);
