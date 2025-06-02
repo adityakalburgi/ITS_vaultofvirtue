@@ -88,28 +88,31 @@ exports.submitSolution = async (req, res) => {
     const challenge = challengeDoc.data();
     
     // Verify solution (case insensitive comparison)
-    if (solution.trim().toLowerCase() !== challenge.solution.trim().toLowerCase()) {
-      // Log failed attempt
-      await db.collection('attempts').add({
-        userId: req.user.uid,
-        username: userData.username,
-        challengeId,
-        challengeTitle: challenge.title,
-        solution: solution,
-        success: false,
-        timestamp: admin.firestore.FieldValue.serverTimestamp()
-      });
-      
-      // Log security event
-      await db.collection('securityLogs').add({
-        type: 'FAILED_SOLUTION',
-        userId: req.user.uid,
-        challengeId,
-        timestamp: admin.firestore.FieldValue.serverTimestamp(),
-        details: `Failed solution attempt for challenge: ${challenge.title}`
-      });
-      
-      return handleResponse(res, 400, false, 'Incorrect solution');
+    try{ 
+      if (solution.trim().toLowerCase() !== challenge.solution.trim().toLowerCase()) {
+        // Log failed attempt
+        await db.collection('attempts').add({
+          userId: req.user.uid,
+          username: userData.username,
+          challengeId,
+          challengeTitle: challenge.title,
+          solution: solution,
+          success: false,
+          timestamp: admin.firestore.FieldValue.serverTimestamp()
+        });
+        
+        // Log security event
+        await db.collection('securityLogs').add({
+          type: 'FAILED_SOLUTION',
+          userId: req.user.uid,
+          challengeId,
+          timestamp: admin.firestore.FieldValue.serverTimestamp(),
+          details: `Failed solution attempt for challenge: ${challenge.title}`
+        });
+        throw new Error("Incorrect Solution");        
+      }}
+    catch (err) {
+        return res.status(400).json({ success: false, message: err.message });
     }
     
     // Solution is correct, update user data in a transaction for consistency
