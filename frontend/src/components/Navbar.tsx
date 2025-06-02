@@ -157,7 +157,7 @@ const Navbar = () => {
             <>
               <div className="flex items-center space-x-2 text-terminal-green">
                 <Coins className="h-4 w-4" />
-                <span className="font-bold">{displayTeamScore}</span>
+                <span className="font-bold">{displayTeamScore} see leaderBoard </span>
               </div>
               <div className="flex items-center space-x-2 text-terminal-green">
                 <User className="h-4 w-4" />
