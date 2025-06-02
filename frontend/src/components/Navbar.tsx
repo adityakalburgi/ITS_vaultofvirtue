@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -15,56 +14,71 @@ const Navbar = () => {
   const [teamScore, setTeamScore] = useState<number | null>(null);
 
   useEffect(() => {
+    console.log("Navbar useEffect triggered - currentUser:", currentUser);
     let intervalId: NodeJS.Timeout | null = null;
 
     const fetchTeamDetails = async () => {
       if (currentUser?.teamId) {
         try {
-          console.log("Navbar: currentUser.teamId:", currentUser.teamId);
+          console.log("Navbar: fetching team details for teamId:", currentUser.teamId);
           const response = await fetch(`${BASE_URL}/api/leaderboard/teams/${currentUser.teamId}`);
           console.log("Navbar: fetch response status:", response.status);
+          
           if (response.ok) {
             const data = await response.json();
             console.log("Navbar: team details data received:", data);
-            setTeamMemberCount(data.data.memberCount);
-            setTeamScore(data.data.score);
+            
+            if (data.success && data.data) {
+              const newTeamScore = data.data.score || 0;
+              const newMemberCount = data.data.memberCount || 0;
+              
+              console.log("Navbar: updating team score to:", newTeamScore);
+              console.log("Navbar: updating member count to:", newMemberCount);
+              
+              setTeamScore(newTeamScore);
+              setTeamMemberCount(newMemberCount);
+            }
           } else {
             console.warn("Navbar: failed to fetch team details, status:", response.status);
-            setTeamMemberCount(null);
-            setTeamScore(null);
           }
         } catch (error) {
           console.error("Navbar: error fetching team details:", error);
-          setTeamMemberCount(null);
-          setTeamScore(null);
         }
       } else {
-        console.log("Navbar: currentUser.teamId is missing");
+        console.log("Navbar: no teamId available, resetting scores");
         setTeamMemberCount(null);
         setTeamScore(null);
       }
     };
 
+    // Initial fetch
     fetchTeamDetails();
 
-    // Update local state immediately when currentUser.teamScore or teamMemberCount changes
+    // Update local state immediately when currentUser has team data
     if (currentUser?.teamScore !== undefined && currentUser?.teamScore !== null) {
+      console.log("Navbar: using currentUser.teamScore:", currentUser.teamScore);
       setTeamScore(currentUser.teamScore);
     }
+    
     if (currentUser?.teamMemberCount !== undefined && currentUser?.teamMemberCount !== null) {
+      console.log("Navbar: using currentUser.teamMemberCount:", currentUser.teamMemberCount);
       setTeamMemberCount(currentUser.teamMemberCount);
     }
 
-    intervalId = setInterval(() => {
-      fetchTeamDetails();
-    }, 10000); // Poll every 10 seconds
+    // Set up polling for team updates
+    if (currentUser?.teamId) {
+      intervalId = setInterval(() => {
+        console.log("Navbar: periodic team details fetch");
+        fetchTeamDetails();
+      }, 5000); // Poll every 5 seconds for more responsive updates
+    }
 
     return () => {
       if (intervalId) {
         clearInterval(intervalId);
       }
     };
-  }, [currentUser]);
+  }, [currentUser?.teamId, currentUser?.teamScore, currentUser?.teamMemberCount, currentUser?.score]);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -79,6 +93,12 @@ const Navbar = () => {
   const isActive = (path: string) => {
     return location.pathname === path;
   };
+
+  // Use fallback values and prioritize AuthContext data
+  const displayTeamScore = currentUser?.teamScore ?? teamScore ?? 0;
+  const displayMemberCount = currentUser?.teamMemberCount ?? teamMemberCount ?? 0;
+
+  console.log("Navbar render - displayTeamScore:", displayTeamScore, "displayMemberCount:", displayMemberCount);
 
   return (
     <nav className="bg-terminal-black border-b border-terminal-green py-4 px-4 md:px-8">
@@ -137,12 +157,12 @@ const Navbar = () => {
             <>
               <div className="flex items-center space-x-2 text-terminal-green">
                 <Coins className="h-4 w-4" />
-                <span className="font-bold">{teamScore ?? teamScore : 0}</span>
+                <span className="font-bold">{displayTeamScore}</span>
               </div>
               <div className="flex items-center space-x-2 text-terminal-green">
                 <User className="h-4 w-4" />
                 <span className="font-bold">{currentUser.teamName || "No Team"}</span>
-                <span className="text-sm text-terminal-green text-opacity-70">({teamMemberCount ?? 0} members)</span>
+                <span className="text-sm text-terminal-green text-opacity-70">({displayMemberCount} members)</span>
               </div>
             </>
           )}
@@ -246,7 +266,7 @@ const Navbar = () => {
             {isAuthenticated && currentUser && !currentUser.isAdmin && (
               <div className="flex items-center space-x-2 text-terminal-green py-2">
                 <Coins className="h-5 w-5" />
-                <span className="font-bold">{teamScore ?? teamScore : 0} points</span>
+                <span className="font-bold">{displayTeamScore} points</span>
               </div>
             )}
 
