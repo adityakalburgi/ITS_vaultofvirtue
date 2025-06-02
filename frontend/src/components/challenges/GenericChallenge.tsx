@@ -44,10 +44,8 @@ const GenericChallenge = ({ challenge }: GenericChallengeProps) => {
     try {
       // Call backend API to validate answer and mark challenge completed
       await completeChallenge(challenge.id, answer.trim());
-      toast.success("Challenge completed! Your score has been updated.");
-    } catch (error) {
-      toast.error("Incorrect answer or submission failed.");
-    } finally {
+    } catch (error) {}
+    finally {
       setIsSubmitting(false);
     }
   };
