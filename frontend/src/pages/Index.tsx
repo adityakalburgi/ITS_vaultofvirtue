@@ -8,7 +8,7 @@ import { Terminal, Code, Shield, Award, Ghost, Skull } from "lucide-react";
 const Index = () => {
   useEffect(() => {
     // Terminal typing effect
-    const text = "Welcome to Vault of Virtue - A Technical Escape Room Challenge by IEEE ITS WITH WIE";
+    const text = "Welcome to Vault of Virtue - A Technical Escape Room Challenge by IEEE ITS and IEEE WIE";
     const typewriterElement = document.getElementById("typewriter");
     if (typewriterElement) {
       typewriterElement.textContent = "";
@@ -93,7 +93,7 @@ const Index = () => {
               {/* Text will be filled by typewriter effect */}
             </h1>
             <p className="text-terminal-green text-xl md:text-2xl mb-8 pulse-text">
-              By IEEE Information theory Society and Womens in Tech
+              By IEEE Information theory Society and Women In Engineering
             </p>
             <div className="flex flex-col md:flex-row items-center justify-center gap-4">
               {isAuthenticated ? (
