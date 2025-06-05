@@ -4,7 +4,7 @@ A horror-themed technical challenge platform featuring the Seven Deadly Sins as 
 
 Developed by **Aditya Kalburgi** for the IEEE ITS WITH WIE event at KLS Gogte Institute of Technology, where around 60 teams participated in this immersive technical challenge experience.
 
-**Live Website:** [www.vaultofvirtue.netlify.app](https://www.vaultofvirtue.netlify.app)
+**Live Website:** [www.vaultofvirtue.netlify.app](https://vaultofvirtue.netlify.app/)
 
 ## 🎮 Project Overview
 
